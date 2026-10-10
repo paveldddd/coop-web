@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no">
   <title>Курник</title>
   <link rel="icon" href="TemplateData/splash.jpg">
+  <!-- встановлена на головний екран — відкривається одразу горизонтально, без адресного рядка -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="TemplateData/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#2a1a0e">
   <style>
     html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #2a1a0e; }
     #unity-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; background: #2a1a0e; }
@@ -45,6 +51,11 @@
       animation: turn 2.2s ease-in-out infinite;
     }
     #rotate small { font-size: 14px; opacity: 0.75; }
+    #playLand {
+      font: bold 22px "Trebuchet MS", Arial, sans-serif; color: #3a1e0c; padding: 16px 40px;
+      background: linear-gradient(#ffd45e, #e8a028); border: 3px solid #1a0d05; border-radius: 6px;
+      box-shadow: 0 5px 0 rgba(0,0,0,0.35); letter-spacing: 1px;
+    }
     @keyframes turn { 0%, 25% { transform: rotate(0deg); } 55%, 100% { transform: rotate(-90deg); } }
     @media (orientation: portrait) and (pointer: coarse) { #rotate { display: flex; } }
   </style>
@@ -57,8 +68,9 @@
   </div>
   <div id="rotate">
     <div class="phone"></div>
-    <div>Поверни телефон горизонтально</div>
-    <small>або торкнись — розвернемо на весь екран</small>
+    <div id="rotTxt">Курник грається горизонтально</div>
+    <button id="playLand">▶ ГРАТИ</button>
+    <small id="rotHint">або просто поверни телефон</small>
   </div>
   <button id="fs" title="На весь екран">⛶</button>
   <script>
@@ -81,14 +93,21 @@
       if (p && p.then) p.then(lock).catch(function () {}); else lock();
     }
     document.addEventListener("touchend", goLandscape, { passive: true });
-    document.querySelector("#rotate").addEventListener("click", goLandscape);
+    document.querySelector("#playLand").addEventListener("click", goLandscape);
+    // iPhone не вміє повноекранний режим для сайтів — лишаємо тільки підказку повернути
+    var el0 = document.documentElement;
+    if (!(el0.requestFullscreen || el0.webkitRequestFullscreen)) {
+      document.querySelector("#playLand").style.display = "none";
+      document.querySelector("#rotTxt").textContent = "Поверни телефон горизонтально";
+      document.querySelector("#rotHint").textContent = "порада: «Поділитися → На екран Додому» — відкриватиметься як застосунок";
+    }
 
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/0d57e50826a5a9f07a810f61edf6573f.loader.js";
+    var loaderUrl = buildUrl + "/9dfb6889ac992b61051edca4ba8ad6b7.loader.js";
     var config = {
-      dataUrl: buildUrl + "/2d3f3551fe0b10b8195fadecf795d6da.data.unityweb",
-      frameworkUrl: buildUrl + "/5148f5758dfbebf0ef7d8543af404728.framework.js.unityweb",
-      codeUrl: buildUrl + "/0af88fa6fa4eab87554ff65d837a4738.wasm.unityweb",
+      dataUrl: buildUrl + "/cab6a7f611b40b9e8e59099715c1d504.data.unityweb",
+      frameworkUrl: buildUrl + "/b4f4f24e6463bef016d5bbe474303449.framework.js.unityweb",
+      codeUrl: buildUrl + "/25ac56f2dcd19a14b9f9f5bed7d193f8.wasm.unityweb",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "DefaultCompany",
       productName: "Курник",
