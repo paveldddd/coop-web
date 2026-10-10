@@ -33,6 +33,20 @@
       color: #fff3d6; font: bold 18px Arial; cursor: pointer; opacity: 0.75;
     }
     #fs:hover { opacity: 1; }
+    /* телефон тримають вертикально — просимо повернути (гра лише горизонтальна) */
+    #rotate {
+      display: none; position: fixed; inset: 0; z-index: 20; background: #2a1a0e;
+      color: #fff3d6; text-align: center; font: bold 18px/1.4 "Trebuchet MS", Arial, sans-serif;
+      flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 24px;
+      text-shadow: 0 2px 0 #3a1e0c;
+    }
+    #rotate .phone {
+      width: 54px; height: 92px; border: 5px solid #ffd45e; border-radius: 10px;
+      animation: turn 2.2s ease-in-out infinite;
+    }
+    #rotate small { font-size: 14px; opacity: 0.75; }
+    @keyframes turn { 0%, 25% { transform: rotate(0deg); } 55%, 100% { transform: rotate(-90deg); } }
+    @media (orientation: portrait) and (pointer: coarse) { #rotate { display: flex; } }
   </style>
 </head>
 <body>
@@ -40,6 +54,11 @@
   <div id="splash">
     <div id="label">Курочки прокидаються…</div>
     <div id="bar"><div id="fill"></div></div>
+  </div>
+  <div id="rotate">
+    <div class="phone"></div>
+    <div>Поверни телефон горизонтально</div>
+    <small>або торкнись — розвернемо на весь екран</small>
   </div>
   <button id="fs" title="На весь екран">⛶</button>
   <script>
@@ -49,12 +68,27 @@
     var label = document.querySelector("#label");
     var lines = ["Курочки прокидаються…", "Сиплемо зерно…", "Розставляємо гніздечка…", "Будимо півника…", "Майже готово!"];
 
+    // На телефоні: перший дотик — на весь екран і замкнути горизонтальну орієнтацію (Android Chrome вміє).
+    var coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    function goLandscape() {
+      if (!coarse) return;
+      var el = document.documentElement;
+      var req = el.requestFullscreen || el.webkitRequestFullscreen;
+      var p = (!document.fullscreenElement && req) ? req.call(el) : null;
+      var lock = function () {
+        if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(function () {});
+      };
+      if (p && p.then) p.then(lock).catch(function () {}); else lock();
+    }
+    document.addEventListener("touchend", goLandscape, { passive: true });
+    document.querySelector("#rotate").addEventListener("click", goLandscape);
+
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/coop-web.loader.js";
+    var loaderUrl = buildUrl + "/0d57e50826a5a9f07a810f61edf6573f.loader.js";
     var config = {
-      dataUrl: buildUrl + "/coop-web.data.unityweb",
-      frameworkUrl: buildUrl + "/coop-web.framework.js.unityweb",
-      codeUrl: buildUrl + "/coop-web.wasm.unityweb",
+      dataUrl: buildUrl + "/2d3f3551fe0b10b8195fadecf795d6da.data.unityweb",
+      frameworkUrl: buildUrl + "/5148f5758dfbebf0ef7d8543af404728.framework.js.unityweb",
+      codeUrl: buildUrl + "/0af88fa6fa4eab87554ff65d837a4738.wasm.unityweb",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "DefaultCompany",
       productName: "Курник",
