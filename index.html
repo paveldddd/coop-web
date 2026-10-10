@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no">
   <title>Курник</title>
   <link rel="icon" href="TemplateData/splash.jpg">
-  <!-- встановлена на головний екран — відкривається одразу горизонтально, без адресного рядка -->
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="TemplateData/icon-192.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
+  <!-- PWA (manifest) поки вимкнено — щоб браузер не пропонував "встановити застосунок" -->
   <meta name="theme-color" content="#2a1a0e">
   <style>
     html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #2a1a0e; }
@@ -78,7 +74,17 @@
     var splash = document.querySelector("#splash");
     var fill = document.querySelector("#fill");
     var label = document.querySelector("#label");
-    var lines = ["Курочки прокидаються…", "Сиплемо зерно…", "Розставляємо гніздечка…", "Будимо півника…", "Майже готово!"];
+    // мова: як у грі (вибір у меню), а вперше — за мовою браузера
+    var ukLang = /^(uk|ru|be)/i.test(navigator.language || "");
+    var lines = ukLang
+      ? ["Курочки прокидаються…", "Сиплемо зерно…", "Розставляємо гніздечка…", "Будимо півника…", "Майже готово!"]
+      : ["The hens are waking up…", "Scattering grain…", "Fluffing the nests…", "Waking the rooster…", "Almost ready!"];
+    if (!ukLang) {
+      document.querySelector("#label").textContent = lines[0];
+      document.querySelector("#rotTxt").textContent = "The coop plays in landscape";
+      document.querySelector("#playLand").textContent = "▶ PLAY";
+      document.querySelector("#rotHint").textContent = "or just rotate your phone";
+    }
 
     // На телефоні: перший дотик — на весь екран і замкнути горизонтальну орієнтацію (Android Chrome вміє).
     var coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
@@ -98,16 +104,16 @@
     var el0 = document.documentElement;
     if (!(el0.requestFullscreen || el0.webkitRequestFullscreen)) {
       document.querySelector("#playLand").style.display = "none";
-      document.querySelector("#rotTxt").textContent = "Поверни телефон горизонтально";
-      document.querySelector("#rotHint").textContent = "порада: «Поділитися → На екран Додому» — відкриватиметься як застосунок";
+      document.querySelector("#rotTxt").textContent = ukLang ? "Поверни телефон горизонтально" : "Rotate your phone to landscape";
+      document.querySelector("#rotHint").textContent = "";
     }
 
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/d3a047fbabec4325aaf0d61cbf71c771.loader.js";
+    var loaderUrl = buildUrl + "/00c867f4b93bcd28d49faa39e10d9e0a.loader.js";
     var config = {
-      dataUrl: buildUrl + "/9ac014ff330aff58fdd11c7eed7f06be.data.unityweb",
-      frameworkUrl: buildUrl + "/b4f4f24e6463bef016d5bbe474303449.framework.js.unityweb",
-      codeUrl: buildUrl + "/7b181f1f69c7725745cc703532819414.wasm.unityweb",
+      dataUrl: buildUrl + "/aaeb58b8b219dd54d23fb897d1c3ba39.data.unityweb",
+      frameworkUrl: buildUrl + "/8bec3790c7cadcb81ba1fb4809642739.framework.js.unityweb",
+      codeUrl: buildUrl + "/779a712d572ba92e350c5e06206676e7.wasm.unityweb",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "DefaultCompany",
       productName: "Курник",
