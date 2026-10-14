@@ -127,12 +127,27 @@
       document.querySelector("#rotHint").textContent = "";
     }
 
+    // Згорнули/розгорнули браузер: на деяких телефонах замість гри білий екран (полотно WebGL не перемальовується),
+    // хоча гра жива. Змушуємо браузер перемалювати полотно; якщо WebGL-контекст справді втрачено — перезавантажуємо.
+    var lostCtx = false;
+    function repaintCanvas() {
+      canvas.style.visibility = "hidden"; void canvas.offsetHeight; canvas.style.visibility = "";
+      window.dispatchEvent(new Event("resize"));
+    }
+    canvas.addEventListener("webglcontextlost", function (e) { e.preventDefault(); lostCtx = true; }, false);
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) return;
+      if (lostCtx) { location.reload(); return; }
+      setTimeout(repaintCanvas, 60); setTimeout(repaintCanvas, 500);
+    });
+    window.addEventListener("pageshow", function (e) { if (e.persisted) location.reload(); }); // повернулись «назад» зі старого кешу сторінки
+
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/4c35fca191dca417da08e66d405e2dcf.loader.js";
+    var loaderUrl = buildUrl + "/bdc2ee67edb241e43945bf19de15ce8a.loader.js";
     var config = {
-      dataUrl: buildUrl + "/4edd40e0ce129fdcb6084fae5090dd0d.data.unityweb",
-      frameworkUrl: buildUrl + "/96a68c889f5d51e054fa74737f0aa27d.framework.js.unityweb",
-      codeUrl: buildUrl + "/aa68239495f5472917d40076e1e4bbe6.wasm.unityweb",
+      dataUrl: buildUrl + "/0cc7ff083d9b0a6d99aefbe2fd00b877.data",
+      frameworkUrl: buildUrl + "/85e4fa02a6200f8d9d32a562b91a4f56.framework.js",
+      codeUrl: buildUrl + "/f82f0a760a0e3d4036fc5515f8ea3698.wasm",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "DefaultCompany",
       productName: "Курник",
