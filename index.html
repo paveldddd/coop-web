@@ -81,7 +81,8 @@
       52% { transform: scaleY(.1); }
       57%, 100% { transform: scaleY(1); }
     }
-    @media (orientation: portrait) and (pointer: coarse) { #rotate { display: flex; } }
+    /* лише на старті: показуємо, поки гравець не повернув телефон / не натиснув ГРАТИ (JS додає .rotOn) */
+    #rotate.rotOn { display: flex; }
   </style>
 </head>
 <body>
@@ -142,7 +143,18 @@
       if (p && p.then) p.then(lock).catch(function () {}); else lock();
     }
     document.addEventListener("touchend", goLandscape, { passive: true });
-    document.querySelector("#playLand").addEventListener("click", goLandscape);
+    document.querySelector("#playLand").addEventListener("click", function () { rotDone = true; updRot(); goLandscape(); });
+    // Екран «нахили телефон» — тільки на початку: після першого горизонтального положення чи ГРАТИ більше не показуємо
+    // (після згортання/розгортання браузера орієнтація скидається, і він би знову вискакував).
+    var rotDone = false, rotEl = document.querySelector("#rotate");
+    var portraitMq = window.matchMedia("(orientation: portrait)");
+    function updRot() {
+      if (!portraitMq.matches) rotDone = true;
+      rotEl.classList.toggle("rotOn", !rotDone && coarse && portraitMq.matches);
+    }
+    if (portraitMq.addEventListener) portraitMq.addEventListener("change", updRot); else if (portraitMq.addListener) portraitMq.addListener(updRot);
+    window.addEventListener("resize", updRot);
+    updRot();
     // iPhone не вміє повноекранний режим для сайтів — лишаємо тільки підказку повернути
     var el0 = document.documentElement;
     if (!(el0.requestFullscreen || el0.webkitRequestFullscreen)) {
@@ -167,11 +179,11 @@
     window.addEventListener("pageshow", function (e) { if (e.persisted) location.reload(); }); // повернулись «назад» зі старого кешу сторінки
 
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/0a77b3a9d4df8e0222daa407933e41a5.loader.js";
+    var loaderUrl = buildUrl + "/5fc2074d0f9da9268721fc41ec667f4e.loader.js";
     var config = {
-      dataUrl: buildUrl + "/a473984aab76ded931680d163b2494d3.data",
-      frameworkUrl: buildUrl + "/cb0c120692a836026325197f7efd807e.framework.js",
-      codeUrl: buildUrl + "/3a1086b8bcd60db7630a6b12c00eff94.wasm",
+      dataUrl: buildUrl + "/4571c953816884e15b925c2a7ccdd98f.data",
+      frameworkUrl: buildUrl + "/65eda656f35191d1a8c952d65be4177a.framework.js",
+      codeUrl: buildUrl + "/a03247b37bf7f3601eafa8968d1cb215.wasm",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "DefaultCompany",
       productName: "Курник",
