@@ -61,17 +61,26 @@
       flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 24px;
       text-shadow: 0 2px 0 #3a1e0c;
     }
-    #rotate .phone {
-      width: 54px; height: 92px; border: 5px solid #ffd45e; border-radius: 10px;
-      animation: turn 2.2s ease-in-out infinite;
-    }
+    #rotate .hen { width: 170px; height: 202px; overflow: visible; margin-bottom: 6px; }
+    #rotate .hen .head { transform-origin: 80px 84px; animation: henTilt 3.4s ease-in-out infinite; }
+    #rotate .hen .eye { transform-box: fill-box; transform-origin: center; animation: henBlink 3.4s linear infinite; }
     #rotate small { font-size: 14px; opacity: 0.75; }
     #playLand {
       font: bold 22px "Trebuchet MS", Arial, sans-serif; color: #3a1e0c; padding: 16px 40px;
       background: linear-gradient(#ffd45e, #e8a028); border: 3px solid #1a0d05; border-radius: 6px;
       box-shadow: 0 5px 0 rgba(0,0,0,0.35); letter-spacing: 1px;
     }
-    @keyframes turn { 0%, 25% { transform: rotate(0deg); } 55%, 100% { transform: rotate(-90deg); } }
+    /* пухля нахиляє голову майже на 90°, кліпає — і швидко повертає назад */
+    @keyframes henTilt {
+      0%, 15% { transform: rotate(0deg); animation-timing-function: ease-in-out; }
+      42%, 70% { transform: rotate(-78deg); animation-timing-function: cubic-bezier(.5, 0, .2, 1); }
+      78%, 100% { transform: rotate(0deg); }
+    }
+    @keyframes henBlink {
+      0%, 48% { transform: scaleY(1); }
+      52% { transform: scaleY(.1); }
+      57%, 100% { transform: scaleY(1); }
+    }
     @media (orientation: portrait) and (pointer: coarse) { #rotate { display: flex; } }
   </style>
 </head>
@@ -82,8 +91,23 @@
     <div id="bar"><div id="fill"></div></div>
   </div>
   <div id="rotate">
-    <div class="phone"></div>
-    <div id="rotTxt">Курник грається горизонтально</div>
+    <svg class="hen" viewBox="0 0 160 190" aria-hidden="true">
+      <g fill="#f0a82a"><rect x="58" y="152" width="12" height="22"/><rect x="90" y="152" width="12" height="22"/>
+        <rect x="48" y="172" width="26" height="9"/><rect x="86" y="172" width="26" height="9"/></g>
+      <rect x="34" y="92" width="92" height="66" fill="#f4f1ea"/>
+      <rect x="26" y="102" width="14" height="42" fill="#e3ded3"/><rect x="120" y="102" width="14" height="42" fill="#e3ded3"/>
+      <rect x="44" y="140" width="72" height="18" fill="#e6e1d6"/>
+      <g class="head">
+        <rect x="64" y="12" width="12" height="14" fill="#d72424"/><rect x="76" y="6" width="12" height="20" fill="#d72424"/><rect x="88" y="14" width="10" height="12" fill="#c01c1c"/>
+        <rect x="52" y="24" width="56" height="62" fill="#fbf9f4"/>
+        <rect x="52" y="76" width="56" height="10" fill="#eae6dc"/>
+        <rect class="eye" x="62" y="42" width="11" height="13" fill="#17120f"/>
+        <rect class="eye" x="87" y="42" width="11" height="13" fill="#17120f"/>
+        <rect x="68" y="58" width="24" height="12" fill="#f2b327"/><rect x="72" y="68" width="16" height="4" fill="#d9951a"/>
+        <rect x="76" y="72" width="8" height="14" fill="#d72424"/>
+      </g>
+    </svg>
+    <div id="rotTxt">Нахили телефон</div>
     <button id="playLand">▶ ГРАТИ</button>
     <small id="rotHint">або просто поверни телефон</small>
   </div>
@@ -100,7 +124,7 @@
       : ["The hens are waking up…", "Scattering grain…", "Fluffing the nests…", "Waking the rooster…", "Almost ready!"];
     if (!ukLang) {
       document.querySelector("#label").textContent = lines[0];
-      document.querySelector("#rotTxt").textContent = "The coop plays in landscape";
+      document.querySelector("#rotTxt").textContent = "Tilt your phone";
       document.querySelector("#playLand").textContent = "▶ PLAY";
       document.querySelector("#rotHint").textContent = "or just rotate your phone";
     }
@@ -123,7 +147,7 @@
     var el0 = document.documentElement;
     if (!(el0.requestFullscreen || el0.webkitRequestFullscreen)) {
       document.querySelector("#playLand").style.display = "none";
-      document.querySelector("#rotTxt").textContent = ukLang ? "Поверни телефон горизонтально" : "Rotate your phone to landscape";
+      document.querySelector("#rotTxt").textContent = ukLang ? "Нахили телефон" : "Tilt your phone";
       document.querySelector("#rotHint").textContent = "";
     }
 
@@ -143,11 +167,11 @@
     window.addEventListener("pageshow", function (e) { if (e.persisted) location.reload(); }); // повернулись «назад» зі старого кешу сторінки
 
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/427e94e947e0003916c9b512e7fae21f.loader.js";
+    var loaderUrl = buildUrl + "/3592564410b8799d7a56e59a03306cea.loader.js";
     var config = {
-      dataUrl: buildUrl + "/f3e2645dcab886eebc2a7d6455e2be01.data",
-      frameworkUrl: buildUrl + "/da3fd47ffa0b0512c7193a383e7f8680.framework.js",
-      codeUrl: buildUrl + "/356321b5954608177fabf573a13c1be3.wasm",
+      dataUrl: buildUrl + "/c4ad96efc8f795fe9a7d1182ae036e18.data",
+      frameworkUrl: buildUrl + "/150451448d424425feb06b3bc67347c5.framework.js",
+      codeUrl: buildUrl + "/d670d1b51fff2725b2044eaf2cc275c1.wasm",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "DefaultCompany",
       productName: "Курник",
