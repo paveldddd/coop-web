@@ -54,6 +54,7 @@
       color: #fff3d6; font: bold 18px Arial; cursor: pointer; opacity: 0.75;
     }
     #fs:hover { opacity: 1; }
+    @media (pointer: coarse) { #fs { display: none; } } /* на телефоні повний екран вмикається сам */
     /* телефон тримають вертикально — просимо повернути (гра лише горизонтальна) */
     #rotate {
       display: none; position: fixed; inset: 0; z-index: 20; background: #2a1a0e;
@@ -179,15 +180,15 @@
     window.addEventListener("pageshow", function (e) { if (e.persisted) location.reload(); }); // повернулись «назад» зі старого кешу сторінки
 
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/9f54029d21bb9ca1cad468aa40e5d8e4.loader.js";
+    var loaderUrl = buildUrl + "/bb379c60167c5e5f6af41599e478c3ca.loader.js";
     var config = {
-      dataUrl: buildUrl + "/0bdf20698f84fce17d6454c293073e40.data",
+      dataUrl: buildUrl + "/1e4f23998e2a26e21c10d7752acbbf86.data",
       frameworkUrl: buildUrl + "/153c84fd889f5d4d50409dabc38fc7a7.framework.js",
-      codeUrl: buildUrl + "/da37141e5a895fae5e1581b770c598de.wasm",
+      codeUrl: buildUrl + "/bec77ec1713f5d6beeddac64700a8fb4.wasm",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "DefaultCompany",
       productName: "Курник",
-      productVersion: "0.1.5",
+      productVersion: "0.1.6",
     };
 
     var script = document.createElement("script");
